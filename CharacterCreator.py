@@ -35,15 +35,22 @@ class Event(StoryElement):
         self.start_date = start_date
         self.end_date = end_date
         self.date = start_date
-        self.linked_characters = linked_characters
+        if linked_characters: #If empty, it will be false. If it has anything, it will be true.
+            self.linked_characters = linked_characters
+        else:
+            self.linked_characters = []
+
     
-    def add_character():
-        sdsad
+    def add_character(self, character_ID):
+        if character_ID not in self.linked_characters:
+            self.linked_characters.append(character_ID)
 
-    def remove_character():
-        sdasdasd
 
-    def display(self):
+    def remove_character(self, character_ID):
+        if character_ID in self.linked_characters:
+            self.linked_characters.remove(character_ID)
+
+    def display(self): #A variable called Character Names will be passed in here purely so that the linked characters print names and not just the ID's.
         super().display_basic_info
         print(f"Start Date: {self.start_date}")
         print(f"End Date: {self.end_date}")
