@@ -143,4 +143,20 @@ def manage_links(): #Menu Option 3
 
 def load_file():
 
-def save_file():
+def save_file(filename, characters, events):
+    data = {
+        "characters": [],
+        "events": []
+    }
+
+    for char in characters:
+        data["characters"].append({
+            "id": char.id,
+            "name": char.name,
+            "description": char.description,
+            "role": char.role,
+            "species": char.species,
+            "abilities": char.abilities
+        })
+    
+    
