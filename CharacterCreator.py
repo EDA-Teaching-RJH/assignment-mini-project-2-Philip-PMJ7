@@ -84,3 +84,31 @@ class Character(StoryElement):
         print(f"Species: {self.species}")
         print(f"Role: {self.role}")
         print(f"Abilities: {self.abilities}")
+
+def get_new_ID(current_IDs):
+    current = 1
+    while current in current_IDs:
+        current += 1
+    return current
+
+def create_character(current_IDs): #Menu Option 1
+    ID = get_new_ID(current_IDs)
+    name = input("Enter the character's name: ")
+    species = input("Enter the character's species (e.g Human, Changeling, Dragonborn): ")
+    description = input("Describe the character: ")
+    role = input("What role (Mentor, Antagonist) do they play in the story?: ")
+    abilities = input("Enter the character's abilities (Skills/Powers): ")
+
+    character = Character(ID, name, description, species, role, abilities)
+
+
+
+
+
+def create_event(): #Menu Option 2
+
+def link_c_to_e(): #Menu Option 3
+
+def load_file():
+
+def save_file():
