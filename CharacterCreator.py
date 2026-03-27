@@ -102,8 +102,6 @@ def create_character(current_IDs): #Menu Option 1
 
 
 
-
-
 def create_event(current_IDs): #Menu Option 2
     ID = get_new_ID(current_IDs)
     name = input("Enter the name of the Event: ")
@@ -129,13 +127,19 @@ def create_event(current_IDs): #Menu Option 2
             print("Does not fit the format. Try again.")
     
     while True:
-        links = input("Link any character's to the Event? [N to exit]")
+        links = input("Link any character's to the Event? [Y/N]")
+        if links.upper() == "Y":
+            manage_links(ID)
+        elif links.upper() == "N":
+            break
+        else:
+            print("That wasn't an option. Try again.")
     
 
 
 
 
-def link_c_to_e(): #Menu Option 3
+def manage_links(): #Menu Option 3
 
 def load_file():
 
