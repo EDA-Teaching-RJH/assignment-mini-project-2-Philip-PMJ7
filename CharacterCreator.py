@@ -50,7 +50,7 @@ class Event(StoryElement):
             self.linked_characters.remove(character_ID)
 
     def display(self): #A variable called Character Names will be passed in here purely so that the linked characters print names and not just the ID's.
-        super().display_basic_info
+        super().display_basic_info()
         print(f"Start Date: {self.start_date}")
         print(f"End Date: {self.end_date}")
         print(f"Linked Characters: {self.linked_characters}")
@@ -79,7 +79,7 @@ class Character(StoryElement):
         self.abilities = new_abilities #That will also let each ability be modular, adding and subtracting each one individually.
     
     def display(self):
-        super().display_basic_info
+        super().display_basic_info()
         print(f"Species: {self.species}")
         print(f"Role: {self.role}")
         print(f"Abilities: {self.abilities}")
@@ -99,6 +99,8 @@ def create_character(current_IDs): #Menu Option 1
     abilities = input("Enter the character's abilities (Skills/Powers): ")
 
     character = Character(ID, name, description, species, role, abilities) #Creates an object of class Character
+
+    return character
 
 #UPDATE BOTH CREATES TO NOT ALLOW NULL INPUTS
 
@@ -138,14 +140,14 @@ def create_event(current_IDs): #Menu Option 2
         else:
             print("Does not fit the format. Try again.")
     
-    while True:
-        links = input("Link any character's to the Event? [Y/N]")
-        if links.upper() == "Y":
-            manage_links(ID)
-        elif links.upper() == "N":
-            break
-        else:
-            print("That wasn't an option. Try again.")
+    print("The event will now be created. To link characters, navigate to Event Links through the menu.")
+
+    linked_characters = []
+
+    event = Event(ID, name, description, start_date, end_date, linked_characters) #Creates an object of class Event
+
+    return event
+    
 
 def manage_links(): #Menu Option 3
     checked_ID = input("Please enter the ID of the ")
