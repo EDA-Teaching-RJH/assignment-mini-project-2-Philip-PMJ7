@@ -243,7 +243,7 @@ def search_all(characters, events): #Menu Option 5
             if re.search(r"^\d{2}-\d{2}-\d+$", date):
                 break
             elif re.search(r"^\d{5,}$", date):
-                end_date = f"{date[:2]}-{date[2:4]}-{date[4:]}"
+                date = f"{date[:2]}-{date[2:4]}-{date[4:]}"
                 YN = input (f"Did you mean to input {date} [Y/N]?: ")
                 if YN.upper() == "Y":
                     break
