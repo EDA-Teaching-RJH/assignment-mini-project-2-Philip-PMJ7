@@ -152,8 +152,64 @@ def create_event(current_IDs): #Menu Option 2
 def manage_links(event, characters): #Menu Option 3
     checked_ID = input("Please enter the ID of the ")
 
+def search_all(characters, events): #Menu Option 5
+    print("\n1. Search by Name")
+    print("2. Search by Role (Characters)")
+    print("3. Search by Date (Events)")
 
-def save_file(filename, characters, events):
+    choice = input("Choose search type: ")
+
+    if choice == "1":
+        name = input("Enter name: ").lower()
+
+        print("\nCharacters Found:")
+        for char in characters:
+            if name in char.name.lower():
+                char.display() #Searches all characters
+
+                # Show linked events
+                print("Appears in events:") #References which events each character is connected to.
+                for event in events:
+                    if char.id in event.linked_characters:
+                        print(f"- {event.name}")
+
+        print("\nEvents Found:") #Also just any event that fits the search
+        for event in events:
+            if name in event.name.lower():
+                event.display()
+
+    elif choice == "2":
+        role = input("Enter role: ").lower()
+
+        for char in characters: #Just which character fits their respective role.
+            if role in char.role.lower():
+                char.display()
+
+    elif choice == "3":
+        while True:
+            date = input("Enter date [DD-MM-(Any number of Y's)]: ")
+            if re.search(r"^\d{2}-\d{2}-\d+$", date):
+                break
+            elif re.search(r"^\d{5,}$", date):
+                end_date = f"{date[:2]}-{date[2:4]}-{date[4:]}"
+                YN = input (f"Did you mean to input {date} [Y/N]?: ")
+                if YN.upper() == "Y":
+                    break
+                elif YN.upper() == "N":
+                    print("Invalid date, try again.")
+                else:
+                   print("Please re-enter the date.")
+            else:
+                print("Does not fit the format. Try again.")
+
+        for event in events:
+            if date == event.start_date or date == event.end_date:
+                event.display()
+
+    else:
+        print("Invalid option.")
+
+def save_file(filename, characters, events): #Menu Option 6
     data = {
         "characters": [],
         "events": []
@@ -184,7 +240,7 @@ def save_file(filename, characters, events):
 
     print("Data saved.")
 
-def load_file(filename):
+def load_file(filename): #Menu Option 7
     try: #To prevent a crash if no file can be found.
         with open(filename, "r") as file:
             data = json.load(file)
@@ -269,7 +325,7 @@ def main():
                 event.display()
         
         elif choice == "5": #Full searching Feature
-            asdasd
+            search_all(characters, events)
         
         elif choice == "6": #Saves everything
             save_file(filename, characters, events)
@@ -277,7 +333,7 @@ def main():
         elif choice == "7": #Similar to earlier, it Loads a save.
             while True:
                 filename = input("Please re-insert your email to access the file: [Type N to exit if accidental.]")
-                if re.search(r"^\w+@\w.+\.(ac.uk | com)$"):
+                if re.search(r"^\w+@\w.+\.(ac\.uk|com)$"):
                     characters, events = load_file(filename)
                     if characters == []:
                         print("Nothing under that email was found. Try again.")
