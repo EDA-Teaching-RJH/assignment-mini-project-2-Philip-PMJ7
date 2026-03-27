@@ -41,11 +41,11 @@ class Event(StoryElement):
 
     
     def add_character(self, character_ID):
-        if character_ID not in self.linked_characters:
+        if character_ID not in self.linked_characters: #If the ID passed in is not in the links list, it will be added.
             self.linked_characters.append(character_ID)
 
 
-    def remove_character(self, character_ID):
+    def remove_character(self, character_ID): #Same as add_character but checks if the ID is there and then removes it.
         if character_ID in self.linked_characters:
             self.linked_characters.remove(character_ID)
 
@@ -84,21 +84,21 @@ class Character(StoryElement):
         print(f"Role: {self.role}")
         print(f"Abilities: {self.abilities}")
 
-def get_new_ID(current_IDs):
+def get_new_ID(current_IDs): #Starting at 1, it looks for the next available ID
     current = 1
     while current in current_IDs:
         current += 1
     return current
 
 def create_character(current_IDs): #Menu Option 1
-    ID = get_new_ID(current_IDs)
+    ID = get_new_ID(current_IDs) #Obtains the next available ID
     name = input("Enter the character's name: ")
     species = input("Enter the character's species (e.g Human, Changeling, Dragonborn): ")
     description = input("Describe the character: ")
     role = input("What role (Mentor, Antagonist) do they play in the story?: ")
     abilities = input("Enter the character's abilities (Skills/Powers): ")
 
-    character = Character(ID, name, description, species, role, abilities)
+    character = Character(ID, name, description, species, role, abilities) #Creates an object of class Character
 
 
 
@@ -108,21 +108,33 @@ def create_event(current_IDs): #Menu Option 2
     description = input("Describe the Event: ")
     while True:
         start_date = input("Enter the date the Event starts [DD-MM-(Any number of Y's)]: ")
-        if re.search(r"^\d{2}-\d{2}-\d+$", start_date):
+        if re.search(r"^\d{2}-\d{2}-\d+$", start_date): #Checks for 2 numbers, followed by a dash, another 2 numbers, another dash, and any amount of numbers after that.
             break
-        elif re.search(r"^\d{5,}$", start_date):
+        elif re.search(r"^\d{5,}$", start_date): #As long as there is 5 numbers minimum, it will try and turn that into a date.
             start_date = f"{start_date[:2]}-{start_date[2:4]}-{start_date[4:]}"
-            break
+            YN = input (f"Did you mean to input {start_date} [Y/N]?: ")
+            if YN.upper() == "Y":
+                break
+            elif YN.upper() == "N":
+                print("Understood re-enter the date.")
+            else:
+                print("Please re-enter the date.")
         else:
             print("Does not fit the format. Try again.")
     
-    while True:
+    while True: #Performs the same as start_date
         end_date = input("Enter the date the Event starts [DD-MM-(Any number of Y's)]: ")
         if re.search(r"^\d{2}-\d{2}-\d+$", end_date):
             break
         elif re.search(r"^\d{5,}$", end_date):
             end_date = f"{end_date[:2]}-{end_date[2:4]}-{end_date[4:]}"
-            break
+            YN = input (f"Did you mean to input {end_date} [Y/N]?: ")
+            if YN.upper() == "Y":
+                break
+            elif YN.upper() == "N":
+                print("Invalid date, try again.")
+            else:
+                print("Please re-enter the date.")
         else:
             print("Does not fit the format. Try again.")
     
@@ -134,14 +146,10 @@ def create_event(current_IDs): #Menu Option 2
             break
         else:
             print("That wasn't an option. Try again.")
-    
-
-
-
 
 def manage_links(): #Menu Option 3
 
-def load_file():
+
 
 def save_file(filename, characters, events):
     data = {
@@ -149,7 +157,7 @@ def save_file(filename, characters, events):
         "events": []
     }
 
-    for char in characters:
+    for char in characters: #Converts every Character object into a dictionary for JSON.
         data["characters"].append({
             "id": char.id,
             "name": char.name,
@@ -159,7 +167,7 @@ def save_file(filename, characters, events):
             "abilities": char.abilities
         })
     
-    for event in events:
+    for event in events: #Converts every Event object into a dictionary for JSON.
         data["events"].append({
             "id": event.id,
             "name": event.name,
@@ -168,3 +176,10 @@ def save_file(filename, characters, events):
             "end_date": event.end_date,
             "linked_characters": event.linked_characters
         })
+    
+    with open(filename, "w") as file: #Opens the file called filename and then writes into it.
+        json.dump(data, file, indent = 4) #Writes a Python object to a file as JSON
+
+    print("Data saved.")
+
+def load_file():
