@@ -149,7 +149,7 @@ def create_event(current_IDs): #Menu Option 2
     return event
     
 
-def manage_links(): #Menu Option 3
+def manage_links(event, characters): #Menu Option 3
     checked_ID = input("Please enter the ID of the ")
 
 
@@ -219,3 +219,43 @@ def load_file(filename):
     
     print("Data Loaded.")
     return characters, events
+
+def main():
+    while True:
+        filename = input ("Your files are stored under your email. Please enter your email to access the right file.")
+        if re.search(r"^\w+@\w.+\.(ac.uk | com)$"):
+            break
+        else:
+            print("That wasn't a valid email. Try again.")
+
+    
+    characters, events = load_file(filename)
+    if characters == []:
+        print("Nothing could be found under that email.")
+        print("If this is your first time, you can save at any point to create your file. ")
+        print("If you ever want to load a file, you can select that option from the menu.")
+        print("--------------------------------------------------------")
+
+    while True:
+        print("\n--- MENU ---")
+        print("1. Create Character")
+        print("2. Create Event")
+        print("3. Manage Links")
+        print("4. View Character's and Events")
+        print("5. Search All")
+        print("5. Save")
+        print("6. Load")
+        print("7. Exit")
+
+        choice = input("Please enter an option: ")
+
+        if choice == "1":
+            existing_ids = [char.id for char in characters]
+            char = create_character(existing_ids)
+            characters.append(char)
+        
+        elif choice == "2":
+            existing_ids = [event.id for event in events]
+            event = create_event(existing_ids)
+            events.append(event)
+        
