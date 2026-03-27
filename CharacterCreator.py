@@ -149,23 +149,60 @@ def create_event(current_IDs): #Menu Option 2
     return event
     
 
-def manage_links(event, characters): #Menu Option 3
+def manage_links(events, characters): #Menu Option 3
     try:
-        event_id = int(input("Enter the Event ID you want to manage: "))
+        event_ID = int(input("Enter the Event ID you want to manage: "))
     except:
         print("Invalid ID.")
         return
 
-    # Find event
+    #Finds the event
     selected_event = None
     for event in events:
-        if event.id == event_id:
+        if event.ID == event_ID:
             selected_event = event
             break
 
     if selected_event is None:
         print("Event not found.")
         return
+    
+    while True:
+        print("\n1. Add Character Link")
+        print("2. Remove Character Link")
+        print("3. Exit")
+
+        choice = input("Choose an option: ")
+
+        if choice == "1":
+            try: #Input Validation
+                char_ID = int(input("Enter Character ID to add: "))
+            except:
+                print("Invalid ID.")
+                continue
+
+            for char in characters:
+                if char.ID == char_ID:
+                    selected_event.add_character(char_ID)
+                    print(f"{char.name} linked.")
+                    break
+            else:
+                print("Character not found.")
+
+        elif choice == "2":
+            try:
+                char_ID = int(input("Enter Character ID to remove: "))
+            except:
+                print("Invalid ID.")
+                continue
+
+            selected_event.remove_character(char_ID)
+            print("Link removed (if it existed).")
+
+        elif choice == "3":
+            break
+        else:
+            print("Invalid option.")
 
 def search_all(characters, events): #Menu Option 5
     print("\n1. Search by Name")
@@ -185,7 +222,7 @@ def search_all(characters, events): #Menu Option 5
                 # Show linked events
                 print("Appears in events:") #References which events each character is connected to.
                 for event in events:
-                    if char.id in event.linked_characters:
+                    if char.ID in event.linked_characters:
                         print(f"- {event.name}")
 
         print("\nEvents Found:") #Also just any event that fits the search
@@ -232,7 +269,7 @@ def save_file(filename, characters, events): #Menu Option 6
 
     for char in characters: #Converts every Character object into a dictionary for JSON.
         data["characters"].append({
-            "id": char.id,
+            "ID": char.ID,
             "name": char.name,
             "description": char.description,
             "role": char.role,
@@ -242,7 +279,7 @@ def save_file(filename, characters, events): #Menu Option 6
     
     for event in events: #Converts every Event object into a dictionary for JSON.
         data["events"].append({
-            "id": event.id,
+            "ID": event.ID,
             "name": event.name,
             "description": event.description,
             "start_date": event.start_date,
@@ -268,7 +305,7 @@ def load_file(filename): #Menu Option 7
 
     for char_data in data["characters"]: #For each dictionary in the list of dictionaries.
         char = Character( #Takes each element in the dictionary and recreates an object of the character class.
-            char_data["id"],
+            char_data["ID"],
             char_data["name"],
             char_data["description"],
             char_data["role"],
@@ -279,7 +316,7 @@ def load_file(filename): #Menu Option 7
     
     for event_data in data["events"]: #For each dictionary in the list of dictionaries.
         event = Event( #Takes each element in the dictionary and recreates an object of the character class.
-            event_data["id"],
+            event_data["ID"],
             event_data["name"],
             event_data["description"],
             event_data["start_date"],
@@ -321,17 +358,17 @@ def main():
         choice = input("Please enter an option: ")
 
         if choice == "1": #Character Creation
-            existing_ids = [char.id for char in characters]
-            char = create_character(existing_ids)
+            existing_IDs = [char.ID for char in characters]
+            char = create_character(existing_IDs)
             characters.append(char)
         
         elif choice == "2": #Event Creation
-            existing_ids = [event.id for event in events]
-            event = create_event(existing_ids)
+            existing_IDs = [event.ID for event in events]
+            event = create_event(existing_IDs)
             events.append(event)
         
         elif choice == "3": #Add or Remove Links
-            asdasd
+            manage_links(events, characters)
         
         elif choice == "4": #Displays all characters and event
             for char in characters:
