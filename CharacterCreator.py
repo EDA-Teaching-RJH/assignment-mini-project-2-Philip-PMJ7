@@ -34,7 +34,6 @@ class Event(StoryElement):
         super().__init__(ID, name, description)
         self.start_date = start_date
         self.end_date = end_date
-        self.date = start_date
         if linked_characters: #If empty, it will be false. If it has anything, it will be true.
             self.linked_characters = linked_characters
         else:
@@ -105,7 +104,36 @@ def create_character(current_IDs): #Menu Option 1
 
 
 
-def create_event(): #Menu Option 2
+def create_event(current_IDs): #Menu Option 2
+    ID = get_new_ID(current_IDs)
+    name = input("Enter the name of the Event: ")
+    description = input("Describe the Event: ")
+    while True:
+        start_date = input("Enter the date the Event starts [DD-MM-(Any number of Y's)]: ")
+        if re.search(r"^\d{2}-\d{2}-\d+$", start_date):
+            break
+        elif re.search(r"^\d{5,}$", start_date):
+            start_date = f"{start_date[:2]}-{start_date[2:4]}-{start_date[4:]}"
+            break
+        else:
+            print("Does not fit the format. Try again.")
+    
+    while True:
+        end_date = input("Enter the date the Event starts [DD-MM-(Any number of Y's)]: ")
+        if re.search(r"^\d{2}-\d{2}-\d+$", end_date):
+            break
+        elif re.search(r"^\d{5,}$", end_date):
+            end_date = f"{end_date[:2]}-{end_date[2:4]}-{end_date[4:]}"
+            break
+        else:
+            print("Does not fit the format. Try again.")
+    
+    while True:
+        links = input("Link any character's to the Event? [N to exit]")
+    
+
+
+
 
 def link_c_to_e(): #Menu Option 3
 
