@@ -159,4 +159,12 @@ def save_file(filename, characters, events):
             "abilities": char.abilities
         })
     
-    
+    for event in events:
+        data["events"].append({
+            "id": event.id,
+            "name": event.name,
+            "description": event.description,
+            "start_date": event.start_date,
+            "end_date": event.end_date,
+            "linked_characters": event.linked_characters
+        })
