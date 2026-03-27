@@ -100,7 +100,7 @@ def create_character(current_IDs): #Menu Option 1
 
     character = Character(ID, name, description, species, role, abilities) #Creates an object of class Character
 
-
+#UPDATE BOTH CREATES TO NOT ALLOW NULL INPUTS
 
 def create_event(current_IDs): #Menu Option 2
     ID = get_new_ID(current_IDs)
@@ -148,7 +148,7 @@ def create_event(current_IDs): #Menu Option 2
             print("That wasn't an option. Try again.")
 
 def manage_links(): #Menu Option 3
-
+    checked_ID = input("Please enter the ID of the ")
 
 
 def save_file(filename, characters, events):
@@ -182,4 +182,38 @@ def save_file(filename, characters, events):
 
     print("Data saved.")
 
-def load_file():
+def load_file(filename):
+    try: #To prevent a crash if no file can be found.
+        with open(filename, "r") as file:
+            data = json.load(file)
+    except:
+        print("Error loading file.")
+        return [], []
+
+    characters = [] #Empties the previous character list to make space for the new ones.
+    events = [] #Same as with characters, it empties the events list.
+
+    for char_data in data["characters"]: #For each dictionary in the list of dictionaries.
+        char = Character( #Takes each element in the dictionary and recreates an object of the character class.
+            char_data["id"],
+            char_data["name"],
+            char_data["description"],
+            char_data["role"],
+            char_data["species"],
+            char_data["abilities"]
+        )
+        characters.append(char)
+    
+    for event_data in data["events"]: #For each dictionary in the list of dictionaries.
+        event = Event( #Takes each element in the dictionary and recreates an object of the character class.
+            event_data["id"],
+            event_data["name"],
+            event_data["description"],
+            event_data["start_date"],
+            event_data["end_date"],
+            event_data["linked_characters"]
+        )
+        events.append(event)
+    
+    print("Data Loaded.")
+    return characters, events
