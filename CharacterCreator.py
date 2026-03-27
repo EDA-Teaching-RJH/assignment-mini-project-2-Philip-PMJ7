@@ -1,6 +1,10 @@
 import re
 import json
 
+# ==========================================
+# CLASSES AND SUPERCLASSES
+# ==========================================
+
 class StoryElement:
     '''StoryElement is a Superclass for both the Character and Event Subclasses.
     def __init__ is the setup for the Superclass.
@@ -75,8 +79,8 @@ class Character(StoryElement):
     def update_role(self, new_role):
         self.role = new_role
     
-    def update_abilities(self, new_abilities): #This may be replaced by a tuple, which can give each ability an individual description.
-        self.abilities = new_abilities #That will also let each ability be modular, adding and subtracting each one individually.
+    def update_abilities(self, new_abilities):
+        self.abilities = new_abilities
     
     def display(self):
         super().display_basic_info()
@@ -84,30 +88,91 @@ class Character(StoryElement):
         print(f"Role: {self.role}")
         print(f"Abilities: {self.abilities}")
 
+# ==========================================
+# SET UP
+# ==========================================
+
 def get_new_ID(current_IDs): #Starting at 1, it looks for the next available ID
     current = 1
     while current in current_IDs:
         current += 1
     return current
 
+def get_normal_input(prompt): #Makes sure the input isn't empty for important areas.
+    while True:
+        value = input(prompt).strip()
+        if value:
+            return value
+        else:
+            print("Input cannot be empty. Please try again.")
+
+# ==========================================
+# CHARACTERS
+# ==========================================
+
 def create_character(current_IDs): #Menu Option 1
     ID = get_new_ID(current_IDs) #Obtains the next available ID
-    name = input("Enter the character's name: ")
-    species = input("Enter the character's species (e.g Human, Changeling, Dragonborn): ")
-    description = input("Describe the character: ")
-    role = input("What role (Mentor, Antagonist) do they play in the story?: ")
-    abilities = input("Enter the character's abilities (Skills/Powers): ")
+    name = get_normal_input("Enter the character's name: ")
+    species = get_normal_input("Enter the character's species (e.g Human, Changeling, Dragonborn): ")
+    description = get_normal_input("Describe the character: ")
+    role = get_normal_input("What role (Mentor, Antagonist) do they play in the story?: ")
+    abilities = get_normal_input("Enter the character's abilities (Skills/Powers): ")
 
     character = Character(ID, name, description, species, role, abilities) #Creates an object of class Character
 
     return character
 
-#UPDATE BOTH CREATES TO NOT ALLOW NULL INPUTS
+def modify_character(characters):
+    try:
+        char_ID = int(input("Enter the ID of the character you want to modify: "))
+    except:
+        print("Invalid ID.")
+        return
+
+    selected_char = None
+    for char in characters:
+        if char.ID == char_ID:
+            selected_char = char
+            break
+
+    if selected_char is None:
+        print("Character not found.")
+        return
+
+    while True:
+        print(f"\nModifying {selected_char.name} (ID {selected_char.ID})")
+        print("1. Name")
+        print("2. Description")
+        print("3. Species")
+        print("4. Role")
+        print("5. Abilities")
+        print("6. Exit")
+
+        choice = input("Which attribute would you like to update? ")
+
+        if choice == "1": #Input Validation (kind of) for each one of these.
+            selected_char.update_name(get_normal_input("Enter new name: "))
+        elif choice == "2":
+            selected_char.update_description(get_normal_input("Enter new description: "))
+        elif choice == "3":
+            selected_char.update_species(get_normal_input("Enter new species: "))
+        elif choice == "4":
+            selected_char.update_role(get_normal_input("Enter new role: "))
+        elif choice == "5":
+            selected_char.update_abilities(get_normal_input("Enter new abilities: "))
+        elif choice == "6":
+            break
+        else:
+            print("Invalid choice.")
+
+# ==========================================
+# EVENTS
+# ==========================================
 
 def create_event(current_IDs): #Menu Option 2
     ID = get_new_ID(current_IDs)
-    name = input("Enter the name of the Event: ")
-    description = input("Describe the Event: ")
+    name = get_normal_input("Enter the name of the Event: ")
+    description = get_normal_input("Describe the Event: ")
     while True:
         start_date = input("Enter the date the Event starts [DD-MM-(Any number of Y's)]: ")
         if re.search(r"^\d{2}-\d{2}-\d+$", start_date): #Checks for 2 numbers, followed by a dash, another 2 numbers, another dash, and any amount of numbers after that.
@@ -148,6 +213,45 @@ def create_event(current_IDs): #Menu Option 2
 
     return event
     
+def modify_event(events, characters):
+    try:
+        event_id = int(input("Enter the ID of the event you want to modify: "))
+    except:
+        print("Invalid ID.")
+        return
+
+    selected_event = None
+    for event in events:
+        if event.ID == event_id:
+            selected_event = event
+            break
+
+    if selected_event is None:
+        print("Event not found.")
+        return
+
+    while True:
+        print(f"\nModifying {selected_event.name} (ID {selected_event.ID})")
+        print("1. Name")
+        print("2. Description")
+        print("3. Start Date")
+        print("4. End Date")
+        print("5. Exit")
+
+        choice = input("Which attribute would you like to update? ")
+
+        if choice == "1":
+            selected_event.update_name(get_normal_input("Enter new name: "))
+        elif choice == "2":
+            selected_event.update_description(get_normal_input("Enter new description: "))
+        elif choice == "3":
+            selected_event.start_date = get_normal_input("Enter new start date [DD-MM-YYYY]: ")
+        elif choice == "4":
+            selected_event.end_date = get_normal_input("Enter new end date [DD-MM-YYYY]: ")
+        elif choice == "5":
+            break
+        else:
+            print("Invalid choice.") #manage_links Handles the modifying of links instead of modify event.
 
 def manage_links(events, characters): #Menu Option 3
     try:
@@ -201,8 +305,13 @@ def manage_links(events, characters): #Menu Option 3
 
         elif choice == "3":
             break
+
         else:
             print("Invalid option.")
+
+# ==========================================
+# SEARCHING
+# ==========================================
 
 def search_all(characters, events): #Menu Option 5
     print("\n1. Search by Name")
@@ -238,7 +347,7 @@ def search_all(characters, events): #Menu Option 5
                 char.display()
 
     elif choice == "3":
-        while True:
+        while True: #Same system as the date checks.
             date = input("Enter date [DD-MM-(Any number of Y's)]: ")
             if re.search(r"^\d{2}-\d{2}-\d+$", date):
                 break
@@ -260,6 +369,10 @@ def search_all(characters, events): #Menu Option 5
 
     else:
         print("Invalid option.")
+
+# ==========================================
+# SAVING AND LOADING
+# ==========================================
 
 def save_file(filename, characters, events): #Menu Option 6
     data = {
@@ -328,6 +441,10 @@ def load_file(filename): #Menu Option 7
     print("Data Loaded.")
     return characters, events
 
+# ==========================================
+# MAIN LOOP
+# ==========================================
+
 def main():
     while True:
         filename = input ("Your files are stored under your email. Please enter your email to access the right file.")
@@ -337,7 +454,7 @@ def main():
             print("That wasn't a valid email. Try again.")
 
     
-    characters, events = load_file(filename)
+    characters, events = load_file(filename) #Tries to load immediately, even though you can manually later. It makes things easier.
     if characters == []:
         print("Nothing could be found under that email.")
         print("If this is your first time, you can save at any point to create your file. ")
@@ -347,13 +464,15 @@ def main():
     while True:
         print("\n--- MENU ---")
         print("1. Create Character")
-        print("2. Create Event")
-        print("3. Manage Links")
-        print("4. View Characters and Events")
-        print("5. Search All")
-        print("6. Save")
-        print("7. Load")
-        print("8. Exit")
+        print("2. Modify Character")
+        print("3. Create Event")
+        print("4. Modify Event")
+        print("5. Manage Links")
+        print("6. View Characters and Events")
+        print("7. Search All")
+        print("8. Save")
+        print("9. Load")
+        print("10. Exit")
 
         choice = input("Please enter an option: ")
 
@@ -362,27 +481,33 @@ def main():
             char = create_character(existing_IDs)
             characters.append(char)
         
-        elif choice == "2": #Event Creation
+        elif choice == "2": #Modifies Character Traits
+            modify_character(characters)
+        
+        elif choice == "3": #Event Creation
             existing_IDs = [event.ID for event in events]
             event = create_event(existing_IDs)
             events.append(event)
         
-        elif choice == "3": #Add or Remove Links
+        elif choice == "4": #Modifies Event Traits
+            modify_event(events, characters)
+
+        elif choice == "5": #Add or Remove Links
             manage_links(events, characters)
         
-        elif choice == "4": #Displays all characters and event
+        elif choice == "6": #Displays all characters and event
             for char in characters:
                 char.display()
             for event in events:
                 event.display()
         
-        elif choice == "5": #Full searching Feature
+        elif choice == "7": #Full searching Feature
             search_all(characters, events)
         
-        elif choice == "6": #Saves everything
+        elif choice == "8": #Saves everything
             save_file(filename, characters, events)
         
-        elif choice == "7": #Similar to earlier, it Loads a save.
+        elif choice == "9": #Similar to earlier, it Loads a save.
             while True:
                 filename = input("Please re-insert your email to access the file: [Type N to exit if accidental.]")
                 if re.search(r"^\w+@\w+\.(ac\.uk|com)$", filename):
@@ -396,9 +521,9 @@ def main():
                 else:
                     print("That wasn't a valid email. Try again.")
 
-        elif choice == "8": #Exits out of the program.
+        elif choice == "10": #Exits out of the program.
             while True:
-                pre_exit_choice = input("Make sure you'ved saved before you exit! Would you like to go back? [Y/N]:")
+                pre_exit_choice = input("Make sure you have saved before you exit! Would you like to go back? [Y/N]:")
                 if pre_exit_choice.upper() == "Y":
                     print("Exiting...") 
                     break
