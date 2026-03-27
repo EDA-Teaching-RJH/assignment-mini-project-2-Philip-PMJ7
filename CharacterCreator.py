@@ -7,7 +7,7 @@ class StoryElement:
     def display_basic_info is for displaying that information.
     Each of the remaining functions updates the names and descriptions respectively.'''
     def __init__(self, ID, name, description):
-        self.id = ID
+        self.ID = ID
         self.name = name
         self.description = description
 
@@ -150,7 +150,22 @@ def create_event(current_IDs): #Menu Option 2
     
 
 def manage_links(event, characters): #Menu Option 3
-    checked_ID = input("Please enter the ID of the ")
+    try:
+        event_id = int(input("Enter the Event ID you want to manage: "))
+    except:
+        print("Invalid ID.")
+        return
+
+    # Find event
+    selected_event = None
+    for event in events:
+        if event.id == event_id:
+            selected_event = event
+            break
+
+    if selected_event is None:
+        print("Event not found.")
+        return
 
 def search_all(characters, events): #Menu Option 5
     print("\n1. Search by Name")
@@ -279,7 +294,7 @@ def load_file(filename): #Menu Option 7
 def main():
     while True:
         filename = input ("Your files are stored under your email. Please enter your email to access the right file.")
-        if re.search(r"^\w+@\w.+\.(ac.uk | com)$"):
+        if re.search(r"^\w+@\w+\.(ac\.uk|com)$", filename):
             break
         else:
             print("That wasn't a valid email. Try again.")
@@ -333,7 +348,7 @@ def main():
         elif choice == "7": #Similar to earlier, it Loads a save.
             while True:
                 filename = input("Please re-insert your email to access the file: [Type N to exit if accidental.]")
-                if re.search(r"^\w+@\w.+\.(ac\.uk|com)$"):
+                if re.search(r"^\w+@\w+\.(ac\.uk|com)$", filename):
                     characters, events = load_file(filename)
                     if characters == []:
                         print("Nothing under that email was found. Try again.")
