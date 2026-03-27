@@ -241,21 +241,66 @@ def main():
         print("1. Create Character")
         print("2. Create Event")
         print("3. Manage Links")
-        print("4. View Character's and Events")
+        print("4. View Characters and Events")
         print("5. Search All")
-        print("5. Save")
-        print("6. Load")
-        print("7. Exit")
+        print("6. Save")
+        print("7. Load")
+        print("8. Exit")
 
         choice = input("Please enter an option: ")
 
-        if choice == "1":
+        if choice == "1": #Character Creation
             existing_ids = [char.id for char in characters]
             char = create_character(existing_ids)
             characters.append(char)
         
-        elif choice == "2":
+        elif choice == "2": #Event Creation
             existing_ids = [event.id for event in events]
             event = create_event(existing_ids)
             events.append(event)
         
+        elif choice == "3": #Add or Remove Links
+            asdasd
+        
+        elif choice == "4": #Displays all characters and event
+            for char in characters:
+                char.display()
+            for event in events:
+                event.display()
+        
+        elif choice == "5": #Full searching Feature
+            asdasd
+        
+        elif choice == "6": #Saves everything
+            save_file(filename, characters, events)
+        
+        elif choice == "7": #Similar to earlier, it Loads a save.
+            while True:
+                filename = input("Please re-insert your email to access the file: [Type N to exit if accidental.]")
+                if re.search(r"^\w+@\w.+\.(ac.uk | com)$"):
+                    characters, events = load_file(filename)
+                    if characters == []:
+                        print("Nothing under that email was found. Try again.")
+                    else:
+                        break
+                elif filename.upper() == "N":
+                    break
+                else:
+                    print("That wasn't a valid email. Try again.")
+
+        elif choice == "8": #Exits out of the program.
+            while True:
+                pre_exit_choice = input("Make sure you'ved saved before you exit! Would you like to go back? [Y/N]:")
+                if pre_exit_choice.upper() == "Y":
+                    print("Exiting...") 
+                    break
+                elif pre_exit_choice.upper() == "N":
+                    print("Returning to menu.")
+                    break
+                else:
+                    print("Answer unclear. Looping.")
+
+            if pre_exit_choice.upper() == "Y":
+                break
+
+main()
